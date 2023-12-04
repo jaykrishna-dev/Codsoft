@@ -1,73 +1,49 @@
-def add_task():
-    task_description = input("Enter task description: ")
-    task_priority = input("Enter task priority (high, medium, low): ")
-    task_due_date = input("Enter task due date (YYYY-MM-DD): ")
-    task = {
-        "description": task_description,
-        "priority": task_priority,
-        "due_date": task_due_date,
-        "completed": False
-    }
-    tasks.append(task)
-    print("Task added successfully!")
+# Create an empty list to store the to-do items.
+to_do_list = []
 
-def display_tasks():
-    for task in tasks:
-        if task["completed"]:
-            print(f"[COMPLETED] {task['description']}")
+# Function to add a item
+def add_item():
+    item = input("Enter a to-do item: ")
+    to_do_list.append(item)
+    print(f"'{item}' has been added to the to-do list.")
+
+# Function to view the to-do list
+def view_list():
+    print("To-Do List:")
+    for index, item in enumerate(to_do_list, 1):
+        print(f"{index}. {item}")
+
+# Function to remove an item
+def remove_item():
+    view_list()
+    try:
+        index = int(input("Enter the number of the item you want to remove: ")) - 1
+        if 0 <= index < len(to_do_list):
+            removed_item = to_do_list.pop(index)
+            print(f"'{removed_item}' has been removed from the to-do list.")
         else:
-            print(f"{task['priority']}: {task['description']} (Due: {task['due_date']})")
+            print("Invalid item number. Please try again.")
+    except ValueError:
+        print("Invalid input. Please enter a number.")
 
-def edit_task():
-    task_index = int(input("Enter task index to edit: "))
-    task = tasks[task_index]
-    new_description = input("Enter new task description: ") or task["description"]
-    new_priority = input("Enter new task priority (high, medium, low): ") or task["priority"]
-    new_due_date = input("Enter new task due date (YYYY-MM-DD): ") or task["due_date"]
-
-    task["description"] = new_description
-    task["priority"] = new_priority
-    task["due_date"] = new_due_date
-    print("Task updated successfully!")
-
-def mark_task_completed():
-    task_index = int(input("Enter task index to mark as completed: "))
-    task = tasks[task_index]
-    task["completed"] = True
-    print("Task marked as completed successfully!")
-
-def delete_task():
-    task_index = int(input("Enter task index to delete: "))
-    tasks.pop(task_index)
-    print("Task deleted successfully!")
-
-def main():
-    while True:
-        print("\nTo-Do List Menu")
-        print("1. Add Task")
-        print("2. Display Tasks")
-        print("3. Edit Task")
-        print("4. Mark Task as Completed")
-        print("5. Delete Task")
-        print("6. Exit")
-
-        selection = input("Enter your selection: ")
-
-        if selection == "1":
-            add_task()
-        elif selection == "2":
-            display_tasks()
-        elif selection == "3":
-            edit_task()
-        elif selection == "4":
-            mark_task_completed()
-        elif selection == "5":
-            delete_task()
-        elif selection == "6":
-            break
-        else:
-            print("Invalid selection. Please choose from the available options.")
-
-if __name__ == "__main__":
-    tasks = []
-    main()
+# Main program loop
+while True:
+    print("\nOptions:")
+    print("1. Add a to-do item")
+    print("2. View to-do list")
+    print("3. Remove a to-do item")
+    print("4. Quit")
+    
+    choice = input("Enter your choice: ")
+    
+    if choice == '1':
+        add_item()
+    elif choice == '2':
+        view_list()
+    elif choice == '3':
+        remove_item()
+    elif choice == '4':
+        print("Thank you have a great day!")
+        break
+    else:
+        print("Invalid choice. Please try again.")
