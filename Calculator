@@ -1,60 +1,66 @@
-import tkinter as tk
+from tkinter import *
 
-def add():
-    num1 = float(num1_entry.get())
-    num2 = float(num2_entry.get())
-    result = num1 + num2
-    result_label.config(text="Result: " + str(result))
+# Define window
+root = Tk()
+root.title("Simple Calculator")
 
-def subtract():
-    num1 = float(num1_entry.get())
-    num2 = float(num2_entry.get())
-    result = num1 - num2
-    result_label.config(text="Result: " + str(result))
+# Define initial variables
+current_number = ""
+last_operation = None
 
-def multiply():
-    num1 = float(num1_entry.get())
-    num2 = float(num2_entry.get())
-    result = num1 * num2
-    result_label.config(text="Result: " + str(result))
 
-def divide():
-    num1 = float(num1_entry.get())
-    num2 = float(num2_entry.get())
+def handle_button_click(value):
+  global current_number, last_operation
+
+  if value.isdigit():
+    current_number += value
+    entry_field.delete(0, END)
+    entry_field.insert(0, current_number)
+  elif value in ["+", "-", "*", "/"]:
+    last_operation = value
+    current_number = entry_field.get()
+    entry_field.delete(0, END)
+  elif value == "C":
+    current_number = ""
+    last_operation = None
+    entry_field.delete(0, END)
+  elif value == "=":
     try:
-        result = num1 / num2
-        result_label.config(text="Result: " + str(result))
-    except ZeroDivisionError:
-        result_label.config(text="Error: Cannot divide by zero")
+      second_number = float(entry_field.get())
+      if last_operation == "+":
+        result = float(current_number) + second_number
+      elif last_operation == "-":
+        result = float(current_number) - second_number
+      elif last_operation == "*":
+        result = float(current_number) * second_number
+      elif last_operation == "/":
+        result = float(current_number) / second_number
+      else:
+        raise ValueError("Invalid operation")
+      current_number = str(result)
+      last_operation = None
+      entry_field.delete(0, END)
+      entry_field.insert(0, current_number)
+    except ValueError:
+      entry_field.delete(0, END)
+      entry_field.insert(0, "Error")
 
-window = tk.Tk()
-window.title("Simple Calculator")
+# Define entry field
+entry_field = Entry(root, width=35, borderwidth=5)
+entry_field.grid(row=0, columnspan=4)
 
-num1_label = tk.Label(window, text="Enter first number:")
-num1_label.pack()
+# Define buttons
+buttons = [
+    ["7", "8", "9", "/", "C"],
+    ["4", "5", "6", "*", "="],
+    ["1", "2", "3", "-", "Clear"],
+    [".", "0", "Enter", "+", "Back"],
+]
 
-num1_entry = tk.Entry(window)
-num1_entry.pack()
+for i in range(4):
+  for j in range(5):
+    button = Button(root, text=buttons[i][j], width=5, command=lambda value=buttons[i][j]: handle_button_click(value))
+    button.grid(row=i+1, column=j)
 
-num2_label = tk.Label(window, text="Enter second number:")
-num2_label.pack()
-
-num2_entry = tk.Entry(window)
-num2_entry.pack()
-
-add_button = tk.Button(window, text="+", command=add)
-add_button.pack()
-
-subtract_button = tk.Button(window, text="-", command=subtract)
-subtract_button.pack()
-
-multiply_button = tk.Button(window, text="*", command=multiply)
-multiply_button.pack()
-
-divide_button = tk.Button(window, text="/", command=divide)
-divide_button.pack()
-
-result_label = tk.Label(window)
-result_label.pack()
-
-window.mainloop()
+# Run the main loop
+root.mainloop()
